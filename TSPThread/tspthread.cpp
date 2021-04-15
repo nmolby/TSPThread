@@ -114,24 +114,25 @@ void permute(PermutationArray p, int i, int n, Route &route) {
 /// finds shortest path starting at location 0 through each other point in permutation
 /// @param n initial call should be with one fewer than numbers in permutation array
 void permuteMain(int n, Route& bestRoute) {
+    //create n threads and a route for each threads
     thread t[n];
-    PermutationArray permutations[n];
+    PermutationArray permutation;
     Route routes[n];
     
     for (unsigned short i=0; i<n; i++) {
-        PermutationArray thisPermutation = permutations[i];
-        swap(thisPermutation.permutation[0], thisPermutation.permutation[i]);
-        
-        permute(thisPermutation, 1, n, routes[i]);
+        swap(permutation.permutation[0], permutation.permutation[i]);
+        //permute each permutation array in its own thread
+        t[i] = thread(permute, permutation, 1, n, std::ref(routes[i]));
         // backtrack
-        swap(thisPermutation.permutation[0], thisPermutation.permutation[i]);
+        swap(permutation.permutation[0], permutation.permutation[i]);
     }
     
     for(unsigned short i = 0; i < n; i++) {
-        //t[i].join();
+        //join this thread to ensure it is completed
+        t[i].join();
+        //if  the route for this thread is better than bestRoute, set bestRoute equal to this route
         if(routes[i] < bestRoute) {
-            memcpy(bestRoute.permutation, routes[i].permutation, sizeof(int) * n);
-            bestRoute.length = routes[i].length;
+            bestRoute = routes[i];
         }
     }
 }
@@ -143,7 +144,7 @@ int main(int argc, const char * argv[]) {
         fname = string(argv[1]);
     }
     else {
-        fname = "/Users/nmolby/Desktop/TSPThread/TSPThread/tsp-in8";
+        fname = "/Users/nmolby/Desktop/TSPThread/TSPThread/tsp-in13";
     }
     ifstream ifs;
     ifs.open(fname.c_str());
