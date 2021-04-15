@@ -9,7 +9,10 @@
 #include <fstream>
 #include <string>
 #include <chrono>
+#include <thread>
+#include <future>
 
+using std::thread;
 using std::cout;
 using std::cerr;
 using std::cin;
@@ -108,6 +111,31 @@ void permute(PermutationArray p, int i, int n, Route &route) {
     }
 }
 
+/// finds shortest path starting at location 0 through each other point in permutation
+/// @param n initial call should be with one fewer than numbers in permutation array
+void permuteMain(int n, Route& bestRoute) {
+    thread t[n];
+    PermutationArray permutations[n];
+    Route routes[n];
+    
+    for (unsigned short i=0; i<n; i++) {
+        PermutationArray thisPermutation = permutations[i];
+        swap(thisPermutation.permutation[0], thisPermutation.permutation[i]);
+        
+        permute(thisPermutation, 1, n, routes[i]);
+        // backtrack
+        swap(thisPermutation.permutation[0], thisPermutation.permutation[i]);
+    }
+    
+    for(unsigned short i = 0; i < n; i++) {
+        //t[i].join();
+        if(routes[i] < bestRoute) {
+            memcpy(bestRoute.permutation, routes[i].permutation, sizeof(int) * n);
+            bestRoute.length = routes[i].length;
+        }
+    }
+}
+
 int main(int argc, const char * argv[]) {
     int i, j, n;
     string fname;
@@ -115,7 +143,7 @@ int main(int argc, const char * argv[]) {
         fname = string(argv[1]);
     }
     else {
-        fname = "/Users/dreed/Capital/CS381/src/TSP/tsp-in13.txt";
+        fname = "/Users/nmolby/Desktop/TSPThread/TSPThread/tsp-in8";
     }
     ifstream ifs;
     ifs.open(fname.c_str());
@@ -130,9 +158,8 @@ int main(int argc, const char * argv[]) {
 
     high_resolution_clock::time_point start = high_resolution_clock::now();
 
-    PermutationArray p;
     Route bestRoute;
-    permute(p, 0, n-1, bestRoute);
+    permuteMain(n - 1, bestRoute);
 
     high_resolution_clock::time_point stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start).count();

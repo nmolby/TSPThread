@@ -25,6 +25,8 @@
 /* Begin PBXFileReference section */
 		11893DDE26287F8D00F0358E /* TSPThread */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TSPThread; sourceTree = BUILT_PRODUCTS_DIR; };
 		11893DE126287F8D00F0358E /* tspthread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tspthread.cpp; sourceTree = "<group>"; };
+		11893DEA262880AD00F0358E /* tsp-in13 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tsp-in13"; sourceTree = "<group>"; };
+		11893DEC2628812500F0358E /* tsp-in8 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tsp-in8"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,8 @@
 			isa = PBXGroup;
 			children = (
 				11893DE126287F8D00F0358E /* tspthread.cpp */,
+				11893DEA262880AD00F0358E /* tsp-in13 */,
+				11893DEC2628812500F0358E /* tsp-in8 */,
 			);
 			path = TSPThread;
 			sourceTree = "<group>";
